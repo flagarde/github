@@ -1,0 +1,13 @@
+{
+    "name": "macOS",
+    "description": "Compile for macOS",
+    "iconName": "macOS",
+    "categories": 
+    [
+        "C++", "C", "CMake"
+    ],
+    "filePatterns": 
+    [
+        "CMakeLists.txt"
+    ]
+}

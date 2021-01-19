@@ -1,0 +1,13 @@
+{
+    "name": "Windows M2sys",
+    "description": "Compile for Windows with M2sys",
+    "iconName": "Windows-M2sys",
+    "categories": 
+    [
+        "C++", "C", "CMake"
+    ],
+    "filePatterns": 
+    [
+        "CMakeLists.txt"
+    ]
+}

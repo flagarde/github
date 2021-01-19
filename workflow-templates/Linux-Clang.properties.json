@@ -1,0 +1,13 @@
+{
+    "name": "Linux Clang",
+    "description": "Compile for Linux with Clang",
+    "iconName": "Linux-Clang",
+    "categories": 
+    [
+        "C++", "C", "CMake"
+    ],
+    "filePatterns": 
+    [
+        "CMakeLists.txt"
+    ]
+}

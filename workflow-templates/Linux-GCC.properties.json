@@ -1,0 +1,13 @@
+{
+    "name": "Linux GCC",
+    "description": "Compile for Linux with GCC",
+    "iconName": "Linux-GCC",
+    "categories": 
+    [
+        "C++", "C", "CMake"
+    ],
+    "filePatterns": 
+    [
+        "CMakeLists.txt"
+    ]
+}

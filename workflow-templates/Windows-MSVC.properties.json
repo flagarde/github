@@ -1,0 +1,13 @@
+{
+    "name": "Windows MSVC",
+    "description": "Compile for Windows with MSVC",
+    "iconName": "Windows-MSVC",
+    "categories": 
+    [
+        "C++", "C", "CMake"
+    ],
+    "filePatterns": 
+    [
+        "CMakeLists.txt"
+    ]
+}
