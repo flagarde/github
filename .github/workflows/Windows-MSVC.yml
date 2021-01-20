@@ -22,6 +22,8 @@ env:
 
 jobs:
   dumb:
+    name: "!ROOT"
+    runs-on: ubuntu-latest
     steps:
     - name: "Check if not a ROOT"
       if: env.INSTALL_ROOT == 'TRUE'
