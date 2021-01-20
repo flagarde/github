@@ -124,6 +124,7 @@ jobs:
       shell: cmake -P {0}
       run: |
           set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.source.tar.gz")
+          file(DOWNLOAD "${ROOT_URL}" ./root.zip)
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
           
     - name: Configure root
