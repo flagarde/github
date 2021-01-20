@@ -1,6 +1,6 @@
 {
-    "name": "macOS",
-    "description": "Compile for macOS",
+    "name": "macOS Clang",
+    "description": "Compile for macOS with Clang",
     "iconName": "macOS",
     "categories": 
     [
