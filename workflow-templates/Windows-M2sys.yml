@@ -67,7 +67,8 @@ jobs:
         update: true
         
     - name: Install ccache ninja
-      run: msys2 -c 'pacman --noconfirm -S ccache ninja'
+      run: pacman --noconfirm -S ccache ninja cmake
+      shell: msys2 {0}
 
     - name: Cache ROOT
       if: env.INSTALL_ROOT == 'TRUE'
@@ -86,17 +87,21 @@ jobs:
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
       
     - name: Configure
-      run: msys2 -c 'cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DROOT_DIR=./root/cmake/'
+      run: cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DROOT_DIR=./root/cmake/
+      shell: msys2 {0}
 
     - name: Build
-      run: msys2 -c 'cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2'
+      run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+      shell: msys2 {0}
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
-      run: msys2 -c 'ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure'
+      run: ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
+      shell: msys2 {0}
 
     - name: Install Strip
-      run: msys2 -c 'cmake --install build --prefix instdir --strip'
+      run: cmake --install build --prefix instdir --strip
+      shell: msys2 {0}
 
   release:
     name: "Release"
