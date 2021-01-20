@@ -69,7 +69,16 @@ jobs:
       uses: seanmiddleditch/gha-setup-ninja@v3
       with:
         version: '${{env.NINJA_VERSION}}'
-        
+    
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        # Increase this value to reset cache if requirements/*.txt has not changed
+        CACHE_NUMBER: 0
+      with:
+        path: ~/conda_pkgs_dir
+        key: ${{ runner.os }}-cacheconda-installconda-${{ matrix.PYTHON_VERSION }}-${{ env.CACHE_NUMBER }}
+    
     - name: Setup conda
       uses: s-weigand/setup-conda@v1
       if: env.INSTALL_ROOT == 'TRUE'
