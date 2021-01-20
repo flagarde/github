@@ -65,6 +65,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ./root ./build-root ./root-install
+        key: root-compile
         
     - name: Install msys2
       uses: msys2/setup-msys2@v2
