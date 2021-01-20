@@ -67,7 +67,7 @@ jobs:
         update: true
         
     - name: Install ccache ninja
-      run: pacman --noconfirm -S ccache ninja cmake
+      run: pacman --noconfirm -S ccache ninja cmake gcc
       shell: msys2 {0}
 
     - name: Cache ROOT
