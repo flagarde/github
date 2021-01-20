@@ -16,6 +16,10 @@ env:
   artifact: "Windows-MSVC.tar.xz"
   BUILDCACHE_VERSION: 0.23.0
   BUILDCACHE_DIR: ${{ github.workspace }}/buildcache_dir
+  INSTALL_ROOT: TRUE
+  ROOT_VERSION: "6.22.06"
+  ROOT_URL: "https://root.cern/download"
+  ROOT_INSTALL_DIR: ${{ github.workspace }}/root
 
 jobs:
   # Checkout apply clang-format and upload artifact
@@ -108,6 +112,33 @@ jobs:
       run: echo "${{github.workspace}}/buildcache/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
       shell: pwsh
 
+    - name: Cache ROOT
+      id: cache-root
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.ROOT_INSTALL_DIR}}
+        key: ${{ matrix.config.name }}-${{ steps.cache_timestamp_string.outputs.timestamp }}
+      
+    - name: Download and unzip ROOT
+      if: steps.cache-root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == "TRUE"
+      shell: cmake -P {0}
+      run: |
+          if(${{ env.BUILD_TYPE }} STREQUAL "Debug")
+            set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.win32.vc16.debug.zip")
+          else()
+            set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.win32.vc16.zip")
+          endif()
+          file(DOWNLOAD "${ROOT_URL}" "./root.zip")
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
+          
+    - name: Set ROOT env
+      if: env.INSTALL_ROOT == "TRUE"
+      run: ${{ env.ROOT_INSTALL_DIR}}\thisroot.bat
+      
+    - name: Test ROOT
+      if: env.INSTALL_ROOT == "TRUE"
+      run: root --version
+          
     - name: Configure
       run: cmake -S ${{ github.workspace }} -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache
 
