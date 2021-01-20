@@ -72,13 +72,13 @@ jobs:
 
     - name: Cache ROOT
       if: env.INSTALL_ROOT == 'TRUE'
-      id: root
+      id: root-compile
       uses: actions/cache@v2
       with:
-        path: ./root-6.22.06 ./build-root ./root-install
+        path: ./root ./build-root ./root-install
       
     - name: Download and unzip ROOT
-      if: steps.root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
+      if: steps.root-compile.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |
           set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.source.tar.gz")
