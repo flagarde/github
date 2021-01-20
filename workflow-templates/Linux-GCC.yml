@@ -75,12 +75,9 @@ jobs:
       
     - name: Cache conda
       uses: actions/cache@v2
-      env:
-        # Increase this value to reset cache if requirements/*.txt has not changed
-        CACHE_NUMBER: 0
       with:
         path: /usr/share/miniconda
-        key: cacheconda-${{ env.CACHE_NUMBER }}
+        key: cacheconda
     
     - name: Install ROOT
       run: conda install root -c conda-forge
