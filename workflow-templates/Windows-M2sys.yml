@@ -11,8 +11,6 @@ env:
   CMAKE_VERSION: 3.16.x
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  CC: gcc
-  CXX: g++
   artifact: "Windows-M2sys.tar.xz"
   INSTALL_ROOT: TRUE
   ROOT_VERSION: "6.22.06"
