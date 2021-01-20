@@ -72,15 +72,15 @@ jobs:
         
     - name: Setup conda
       uses: s-weigand/setup-conda@v1
-      if: ${{ ${{ env.INSTALL_ROOT}} == "TRUE" }}
+      if: env.INSTALL_ROOT == 'TRUE'
     
     - name: Install ROOT
       run: conda install root -c conda-forge
-      if: ${{ ${{ env.INSTALL_ROOT}} == "TRUE" }}
+      if: env.INSTALL_ROOT == 'TRUE'
       
     - name: Test ROOT
       run: root --version
-      if: ${{ ${{ env.INSTALL_ROOT}} == "TRUE" }}
+      if: env.INSTALL_ROOT == 'TRUE'
       
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
