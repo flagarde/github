@@ -17,7 +17,6 @@ env:
   INSTALL_ROOT: TRUE
   ROOT_VERSION: "6.22.06"
   ROOT_URL: "https://root.cern/download"
-  ROOT_INSTALL_DIR: ${{ github.workspace }}/root
 
 jobs:
   # Checkout apply clang-format and upload artifact
@@ -98,7 +97,7 @@ jobs:
           
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
-      run: msys2 ${{ env.ROOT_INSTALL_DIR}}/thisroot.sh
+      run: msys2 ./root/thisroot.sh
     
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'

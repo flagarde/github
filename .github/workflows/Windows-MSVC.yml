@@ -19,8 +19,6 @@ env:
   INSTALL_ROOT: TRUE
   ROOT_VERSION: "6.22.06"
   ROOT_URL: "https://root.cern/download"
-  ROOT_INSTALL_DIR: ${{ github.workspace }}/root
-  ROOT_INSTALL_DIR_WINDOWS: ${{ github.workspace }}\root
 
 jobs:
   # Checkout apply clang-format and upload artifact
@@ -135,7 +133,7 @@ jobs:
           
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
-      run: ${{ env.ROOT_INSTALL_DIR_WINDOWS }}\thisroot.bat
+      run: .\root\thisroot.bat
       
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'
