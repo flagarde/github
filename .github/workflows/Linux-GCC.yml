@@ -70,6 +70,9 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
     
+    - name: Setup conda
+      uses: s-weigand/setup-conda@v1
+      
     - name: Cache conda
       uses: actions/cache@v2
       env:
@@ -77,11 +80,7 @@ jobs:
         CACHE_NUMBER: 0
       with:
         path: /usr/share/miniconda
-        key: ${{ runner.os }}-cacheconda-installconda-${{ matrix.PYTHON_VERSION }}-${{ env.CACHE_NUMBER }}
-    
-    - name: Setup conda
-      uses: s-weigand/setup-conda@v1
-      if: env.INSTALL_ROOT == 'TRUE'
+        key: cacheconda-${{ env.CACHE_NUMBER }}
     
     - name: Install ROOT
       run: conda install root -c conda-forge
