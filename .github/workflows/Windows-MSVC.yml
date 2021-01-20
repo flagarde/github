@@ -116,38 +116,33 @@ jobs:
 
     - name: Cache ROOT
       if: env.INSTALL_ROOT == 'TRUE'
-      id: root
+      id: cache-root
       uses: actions/cache@v2
       with:
-        path: ./root-6.22.06 ./build-root ./root-install
-        key: ${{ steps.cache_timestamp_string.outputs.timestamp }}
+        path: .\root
+        key: ${{ matrix.config.name }}-${{ steps.cache_timestamp_string.outputs.timestamp }}
       
     - name: Download and unzip ROOT
-      if: steps.root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
+      if: steps.cache-root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |
-          set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.source.tar.gz")
-          file(DOWNLOAD "${ROOT_URL}" ./root.zip)
+          if(${{ env.BUILD_TYPE }} STREQUAL "Debug")
+            set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.win32.vc16.debug.zip")
+          else()
+            set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.win32.vc16.zip")
+          endif()
+          file(DOWNLOAD "${ROOT_URL}" "./root.zip")
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
-          
-    - name: Configure root
-      run: cmake -S .\root-6.22.06 -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache -Dbuiltin_gsl=ON
-      
-    - name: Build ROOT
-      run: cmake --build build-root --config ${{ env.BUILD_TYPE }} --parallel 2
-      
-    - name: Install ROOT
-      run: cmake --install build-root --prefix .\root-install --strip
           
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
       shell: cmd
-      run: .\root-install\bin\thisroot.bat
+      run: .\root\bin\thisroot.bat
       
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'
       shell: cmd
-      run: .\root-install\bin\thisroot.bat && root --version
+      run: .\root\bin\thisroot.bat && root --version
           
     - name: Configure
       run: .\root-install\bin\thisroot.bat && cmake -S ${{ github.workspace }} -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache
@@ -155,13 +150,16 @@ jobs:
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+      shell: cmd
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
       run: ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
+      shell: cmd
 
     - name: Install Strip
       run: cmake --install build --prefix instdir --strip
+      shell: cmd
 
   release:
     name: "Release"
