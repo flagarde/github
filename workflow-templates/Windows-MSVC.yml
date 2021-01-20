@@ -80,7 +80,7 @@ jobs:
     - name: Setup vsdevenv
       uses: seanmiddleditch/gha-setup-vsdevenv@master
       with:
-        host_arch: 'x86'
+        arch: 'x86'
 
     - name: Download buildcache
       id: buildcache-download
