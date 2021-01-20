@@ -133,6 +133,7 @@ jobs:
           
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
+      shell: cmd
       run: .\root\bin\thisroot.bat
       
     - name: Test ROOT

@@ -98,7 +98,7 @@ jobs:
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
       shell: msys2 {0}
-      run: bash ./root/bin/thisroot.sh
+      run: cd ./root/bin/ ; bash .thisroot.sh
     
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'
