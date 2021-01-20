@@ -127,13 +127,17 @@ jobs:
       if: steps.cache-root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |
-          if(${{ env.BUILD_TYPE }} STREQUAL "Debug")
-            set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.win32.vc16.debug.zip")
-          else()
-            set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.win32.vc16.zip")
-          endif()
-          file(DOWNLOAD "${ROOT_URL}" "./root.zip")
+          set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.source.tar.gz")
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
+          
+    - name: Configure root
+      run: cmake -S .\root -G Ninja -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache
+      
+    - name: Build ROOT
+      run: cmake --build build-root --config ${{ env.BUILD_TYPE }} --parallel 2
+      
+    - name: Install ROOT
+      run: cmake --install build-root --prefix .\root --strip
           
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
