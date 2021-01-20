@@ -75,9 +75,12 @@ jobs:
       uses: seanmiddleditch/gha-setup-ninja@v3
       with:
         version: '${{env.NINJA_VERSION}}'
-
+    
+    # Default to x86 because ROOT is compiled for x86
     - name: Setup vsdevenv
       uses: seanmiddleditch/gha-setup-vsdevenv@master
+      with:
+        host_arch: 'x86'
 
     - name: Download buildcache
       id: buildcache-download
