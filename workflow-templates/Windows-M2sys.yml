@@ -61,17 +61,6 @@ jobs:
       with:
         name: clang-format
 
-    - name: Install cmake
-      uses: jwlawson/actions-setup-cmake@v1.6
-      with:
-        cmake-version: '${{env.CMAKE_VERSION}}'
-        github-api-token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Install Ninja
-      uses: seanmiddleditch/gha-setup-ninja@v3
-      with:
-        version: '${{env.NINJA_VERSION}}'
-
     - name: Install msys2
       uses: msys2/setup-msys2@v2
       with:
