@@ -71,11 +71,11 @@ jobs:
         version: '${{env.NINJA_VERSION}}'
 
     - name: Install ROOT
-      if: ${{ ${{ env.INSTALL_ROOT}} == "TRUE" }}
+      if: env.INSTALL_ROOT == 'TRUE'
       run: brew install root
       
     - name: Test ROOT
-      if: env.INSTALL_ROOT == "TRUE"
+      if: env.INSTALL_ROOT == 'TRUE'
       run: root --version
         
     - name: Use ccache
