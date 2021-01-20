@@ -113,6 +113,7 @@ jobs:
       shell: pwsh
 
     - name: Cache ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
       id: cache-root
       uses: actions/cache@v2
       with:
@@ -120,7 +121,7 @@ jobs:
         key: ${{ matrix.config.name }}-${{ steps.cache_timestamp_string.outputs.timestamp }}
       
     - name: Download and unzip ROOT
-      if: steps.cache-root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == "TRUE"
+      if: steps.cache-root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |
           if(${{ env.BUILD_TYPE }} STREQUAL "Debug")
@@ -132,11 +133,11 @@ jobs:
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
           
     - name: Set ROOT env
-      if: env.INSTALL_ROOT == "TRUE"
+      if: env.INSTALL_ROOT == 'TRUE'
       run: ${{ env.ROOT_INSTALL_DIR}}\thisroot.bat
       
     - name: Test ROOT
-      if: env.INSTALL_ROOT == "TRUE"
+      if: env.INSTALL_ROOT == 'TRUE'
       run: root --version
           
     - name: Configure
