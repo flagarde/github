@@ -113,14 +113,14 @@ jobs:
 
     - name: Cache ROOT
       if: env.INSTALL_ROOT == 'TRUE'
-      id: cache-root
+      id: root
       uses: actions/cache@v2
       with:
         path: .\root
         key: ${{ matrix.config.name }}-${{ steps.cache_timestamp_string.outputs.timestamp }}
       
     - name: Download and unzip ROOT
-      if: steps.cache-root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
+      if: steps.root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |
           set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.source.tar.gz")
