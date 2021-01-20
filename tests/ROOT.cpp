@@ -2,6 +2,6 @@
 
 int main()
 {
-
-  return 0;
+  TFile file("Dumb.root","RECREATE");
+  return file.IsOpen();
 }

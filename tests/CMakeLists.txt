@@ -1,9 +1,10 @@
 add_executable(Dumb Dumb.cpp)
 install(TARGETS Dumb RUNTIME DESTINATION "bin/tests")
 
-#if($ENV{INSTALL_ROOT} STREQUAL "TRUE")
+if(DEFINED $ENV{INSTALL_ROOT} AND $ENV{INSTALL_ROOT} STREQUAL "TRUE")
   message(STATUS "ROOT should be installed. Compiling the ROOT tests")
-  find_package(ROOT)
+  find_package(ROOT REQUIRED)
   add_executable(ROOT ROOT.cpp)
+  target_link_libraries(ROOT PUBLIC ROOT::Core ROOT::Tree)
   install(TARGETS ROOT RUNTIME DESTINATION "bin/tests")
-#endif()
+endif()
