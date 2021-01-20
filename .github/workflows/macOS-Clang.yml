@@ -1,4 +1,4 @@
-name: Windows M2sys
+name: macOS Clang
 
 on:
     push:
@@ -11,10 +11,10 @@ env:
   CMAKE_VERSION: 3.16.x
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  artifact: "Windows-M2sys.tar.xz"
+  CC: clang
+  CXX: clang++
+  artifact: "macOS.tar.xz"
   INSTALL_ROOT: TRUE
-  ROOT_VERSION: "6.22.06"
-  ROOT_URL: "https://root.cern/download"
 
 jobs:
   # Checkout apply clang-format and upload artifact
@@ -52,69 +52,47 @@ jobs:
   build:
     needs: format
     name: "Build"
-    runs-on: windows-latest
+    runs-on: macos-latest
     steps:
 
     - uses: actions/download-artifact@v2
       with:
         name: clang-format
-        
-    - name: Cache ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      id: root-compile
-      uses: actions/cache@v2
+
+    - name: Install cmake
+      uses: jwlawson/actions-setup-cmake@v1.6
       with:
-        path: ./root ./build-root ./root-install
-        key: root-compile
-        
-    - name: Install msys2
-      uses: msys2/setup-msys2@v2
+        cmake-version: '${{env.CMAKE_VERSION}}'
+        github-api-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v3
       with:
-        path-type: minimal
-        release: true
-        update: true
-        
-    - name: Install ccache ninja
-      run: pacman --noconfirm -S ccache ninja cmake gcc make llvm python git
-      shell: msys2 {0}
-      
-    - name: Download and unzip ROOT
-      if: steps.root-compile.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
-      shell: cmake -P {0}
-      run: |
-          set(ROOT_URL "$ENV{ROOT_URL}/root_v$ENV{ROOT_VERSION}.source.tar.gz")
-          file(DOWNLOAD "${ROOT_URL}" ./root.zip)
-          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
-          
-    - name: Configure root
-      run: cmake -S ./root-6.22.06 -G Ninja -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -Dx11=OFF
-      shell: msys2 {0}
-      
-    - name: Build ROOT
-      run: cmake --build build-root --config ${{ env.BUILD_TYPE }} --parallel 2
-      shell: msys2 {0}
-      
+        version: '${{env.NINJA_VERSION}}'
+
     - name: Install ROOT
-      run: cmake --install build-root --prefix ./root-install --strip
-      shell: msys2 {0}
+      if: env.INSTALL_ROOT == 'TRUE'
+      run: brew install root
       
+    - name: Test ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
+      run: root --version
+        
+    - name: Use ccache
+      uses: hendrikmuhs/ccache-action@v1.0.2
+
     - name: Configure
-      working-directory: ${{ github.workspace }}
-      run: bash ./root-install/bin/thisroot.sh ; cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-      shell: msys2 {0}
+      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
-      shell: msys2 {0}
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
       run: ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
-      shell: msys2 {0}
 
     - name: Install Strip
       run: cmake --install build --prefix instdir --strip
-      shell: msys2 {0}
 
   release:
     name: "Release"
@@ -134,13 +112,9 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Store Release url
+    - name: 🔗 Store Release url
       run: |
         echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
-
-    - name: Pack
-      working-directory: instdir
-      run: cmake -E tar cJfv ../${{ env.artifact }} .
 
     - name: Upload
       uses: actions/upload-artifact@v2
@@ -149,11 +123,12 @@ jobs:
         name: ${{ env.artifact }}
 
   publish:
-    if: contains(github.ref, 'tags/v')
     name: "Publish"
+    if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+
     needs: release
 
     steps:
