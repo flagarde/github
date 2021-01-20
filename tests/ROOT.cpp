@@ -3,5 +3,6 @@
 int main()
 {
   TFile file("Dumb.root","RECREATE");
-  return file.IsOpen();
+  if(file.IsOpen()==kTRUE) return 0;
+  else return 1;
 }

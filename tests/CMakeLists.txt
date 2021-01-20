@@ -1,5 +1,6 @@
 add_executable(Dumb Dumb.cpp)
 install(TARGETS Dumb RUNTIME DESTINATION "bin/tests")
+add_test(NAME Dumb COMMAND Dumb)
 
 if(DEFINED ENV{INSTALL_ROOT})
   if($ENV{INSTALL_ROOT} STREQUAL "true")
@@ -8,5 +9,6 @@ if(DEFINED ENV{INSTALL_ROOT})
     add_executable(ROOT ROOT.cpp)
     target_link_libraries(ROOT PUBLIC ROOT::Core ROOT::Tree)
     install(TARGETS ROOT RUNTIME DESTINATION "bin/tests")
+    add_test(NAME ROOT COMMAND ROOT)
   endif()
 endif()

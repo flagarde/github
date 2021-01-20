@@ -4,4 +4,7 @@ project(.github VERSION "0.9.0.0" DESCRIPTION "Folder for default workflows and 
 
 option(BUILD_TESTS "Build the tests" ON)
 
-add_subdirectory(tests)
+if(BUILD_TESTS)
+  include(CTest)
+  add_subdirectory(tests)
+endif()
