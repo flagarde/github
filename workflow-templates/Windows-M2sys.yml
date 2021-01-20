@@ -58,7 +58,14 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: clang-format
-
+        
+    - name: Cache ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
+      id: root-compile
+      uses: actions/cache@v2
+      with:
+        path: ./root ./build-root ./root-install
+        
     - name: Install msys2
       uses: msys2/setup-msys2@v2
       with:
@@ -69,13 +76,6 @@ jobs:
     - name: Install ccache ninja
       run: pacman --noconfirm -S ccache ninja cmake gcc openssl
       shell: msys2 {0}
-
-    - name: Cache ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      id: root-compile
-      uses: actions/cache@v2
-      with:
-        path: ./root ./build-root ./root-install
       
     - name: Download and unzip ROOT
       if: steps.root-compile.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
