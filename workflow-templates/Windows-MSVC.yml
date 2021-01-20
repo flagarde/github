@@ -78,6 +78,9 @@ jobs:
     
     - name: Setup vsdevenv
       uses: seanmiddleditch/gha-setup-vsdevenv@master
+      with:
+        arch: 'x86'
+        host_arch: 'x86'
 
     - name: Download buildcache
       id: buildcache-download
