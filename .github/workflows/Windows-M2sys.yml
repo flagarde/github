@@ -87,17 +87,20 @@ jobs:
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
           
     - name: Configure root
-      run: cmake -S .\root-6.22.06 -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache
+      run: cmake -S .\root-6.22.06 -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+      shell: msys2 {0}
       
     - name: Build ROOT
       run: cmake --build build-root --config ${{ env.BUILD_TYPE }} --parallel 2
+      shell: msys2 {0}
       
     - name: Install ROOT
-      run: cmake --install build-root --strip
+      run: cmake --install build-root --prefix ./root-install --strip
+      shell: msys2 {0}
       
     - name: Configure
       working-directory: ${{ github.workspace }}
-      run: cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+      run: bash ./root-install/bin/thisroot.sh ; cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
       shell: msys2 {0}
 
     - name: Build
