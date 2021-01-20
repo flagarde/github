@@ -97,8 +97,9 @@ jobs:
           
     - name: Set ROOT env
       if: env.INSTALL_ROOT == 'TRUE'
+      working-directory: ${{ github.workspace }}/root/bin
       shell: msys2 {0}
-      run: cd ./root/bin/ ; bash ./thisroot.sh
+      run: bash ./thisroot.sh
     
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'
