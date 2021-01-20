@@ -67,6 +67,9 @@ jobs:
         path-type: inherit
         release: true
         update: true
+        
+    - name: Install ccache ninja
+      run: msys2 -c 'pacman -S ccache ninja'
 
     - name: Cache ROOT
       if: env.INSTALL_ROOT == 'TRUE'
