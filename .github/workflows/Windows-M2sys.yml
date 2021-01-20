@@ -76,7 +76,6 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ./root-6.22.06 ./build-root ./root-install
-        key: ${{ steps.cache_timestamp_string.outputs.timestamp }}
       
     - name: Download and unzip ROOT
       if: steps.root.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
