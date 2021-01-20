@@ -139,10 +139,10 @@ jobs:
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'
       shell: cmd
-      run: ".\root\bin\thisroot.bat && root --version"
+      run: .\root\bin\thisroot.bat && root --version
           
     - name: Configure
-      run: ".\root\bin\thisroot.bat && cmake -S ${{ github.workspace }} -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache"
+      run: .\root\bin\thisroot.bat && cmake -S ${{ github.workspace }} -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache
       shell: cmd
 
     - name: Build
