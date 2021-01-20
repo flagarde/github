@@ -87,7 +87,7 @@ jobs:
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root.zip)
           
     - name: Configure root
-      run: cmake -S ./root-6.22.06 -G Ninja -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+      run: cmake -S ./root-6.22.06 -G Ninja -B build-root -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -Dx11=OFF
       shell: msys2 {0}
       
     - name: Build ROOT
