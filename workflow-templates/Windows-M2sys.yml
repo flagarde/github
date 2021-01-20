@@ -84,7 +84,7 @@ jobs:
       id: cache-root
       uses: actions/cache@v2
       with:
-        path: ${{ env.ROOT_INSTALL_DIR}}
+        path: .\root
         key: ${{ matrix.config.name }}-${{ steps.cache_timestamp_string.outputs.timestamp }}
       
     - name: Download and unzip ROOT
