@@ -82,7 +82,7 @@ jobs:
       id: cache-geant4
       uses: actions/cache@v2
       with:
-        path: ./geant4
+        path: ./geant4-${{ env.GEANT4_VERSION }} ./geant4-install
         key: geant4-${{ env.GEANT4_VERSION }}  
       
     - name: Download and extract GEANT4
@@ -95,14 +95,14 @@ jobs:
           
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ${{ github.workspace }}/geant4/ -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=ON
+      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=ON
       
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
       run: cmake --build build-geant4 --config ${{ env.BUILD_TYPE }} --parallel 2
       
     - name: Install Strip
-      run: cmake --install build --prefix geant4 --strip
+      run: cmake --install build --prefix geant4-install --strip
       
     - name: Download and unzip ROOT
       if: steps.root-compile.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
