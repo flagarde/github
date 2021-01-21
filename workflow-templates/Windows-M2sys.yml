@@ -20,7 +20,7 @@ env:
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
-  GEANT4_INSTALL_DATA: ON
+  GEANT4_INSTALL_DATA: OFF
 
 jobs:
   # Checkout apply clang-format and upload artifact
