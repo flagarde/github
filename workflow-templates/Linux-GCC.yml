@@ -104,7 +104,7 @@ jobs:
 
     - name: Install Strip
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake --install build-geant4 --prefix geant4-install --strip
+      run: sudo cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Install ROOT
       run: conda install root -c conda-forge
