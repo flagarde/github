@@ -110,7 +110,7 @@ jobs:
 
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DGEANT4_INSTALL_DATADIR=./geant4-install
+      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }}
 
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
