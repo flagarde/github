@@ -21,21 +21,9 @@ env:
   ROOT_URL: "https://root.cern/download"
 
 jobs:
-  dumb:
-    name: "!ROOT"
-    runs-on: ubuntu-latest
-    steps:
-    - name: "Check if not a ROOT"
-      if: env.INSTALL_ROOT == 'TRUE'
-      run: echo Not yet implemented. You cannot compile application for windows with ROOT
-    
-    - name: "Now crash"
-      if: env.INSTALL_ROOT == 'TRUE'
-      run: Crash !
     
   # Checkout apply clang-format and upload artifact
   format:
-    needs: dumb
     name: "Format"
     runs-on: ubuntu-latest
     steps:
