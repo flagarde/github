@@ -59,7 +59,7 @@ jobs:
     steps:
         
     - name: Install libexpact
-      run: sudo apt-get install libexpat-dev
+      run: sudo apt-get install libexpat1-dev libexpat1
       
     - uses: actions/download-artifact@v2
       with:
