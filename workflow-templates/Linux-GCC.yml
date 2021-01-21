@@ -57,9 +57,6 @@ jobs:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
-        
-    - name: Install libexpact
-      run: sudo apt-get install libexpat1-dev libexpat1
       
     - uses: actions/download-artifact@v2
       with:
@@ -102,7 +99,7 @@ jobs:
           
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=ON
+      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_SYSTEM_EXPAT=OFF
       
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
