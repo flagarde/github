@@ -42,9 +42,6 @@ jobs:
       uses: BSFishy/pip-action@v1
       with:
         packages: cmakelang pyyaml jinja2
-        
-    - name: Install libexpact
-      run: sudo apt-get install libexpat-dev
 
     - name: Use cmake-format
       run: find . \( -name '*.cmake' -o -name 'CMakeLists.txt' \) -exec cmake-format -i {} \;
@@ -60,7 +57,10 @@ jobs:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
-
+        
+    - name: Install libexpact
+      run: sudo apt-get install libexpat-dev
+      
     - uses: actions/download-artifact@v2
       with:
         name: clang-format
