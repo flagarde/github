@@ -44,7 +44,7 @@ jobs:
         packages: cmakelang pyyaml jinja2
         
     - name: Install libexpact
-      run: apt-get install libexpat-dev
+      run: sudo apt-get install libexpat-dev
 
     - name: Use cmake-format
       run: find . \( -name '*.cmake' -o -name 'CMakeLists.txt' \) -exec cmake-format -i {} \;
