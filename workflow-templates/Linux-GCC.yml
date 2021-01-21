@@ -88,6 +88,9 @@ jobs:
       with:
         path: ./geant4-${{ env.GEANT4_VERSION }} ./geant4-install
         key: geant4-${{ env.GEANT4_VERSION }}  
+  
+    - name: Use ccache
+      uses: hendrikmuhs/ccache-action@v1.0.2
       
     - name: Download and extract GEANT4
       if: env.INSTALL_GEANT4 == 'TRUE' && steps.cache-geant4.outputs.cache-hit != 'true'
@@ -115,9 +118,6 @@ jobs:
     - name: Test ROOT
       run: root --version
       if: env.INSTALL_ROOT == 'TRUE'
-      
-    - name: Use ccache
-      uses: hendrikmuhs/ccache-action@v1.0.2
 
     - name: Configure
       run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache 
