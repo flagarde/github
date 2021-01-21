@@ -60,14 +60,9 @@ foreach(_script ${EXAMPLEB1_SCRIPTS})
 endforeach()
 
 #----------------------------------------------------------------------------
-# For internal Geant4 use - but has no effect if you build this
-# example standalone
-#
-add_custom_target(B1 DEPENDS exampleB1)
-
-#----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 install(TARGETS exampleB1 DESTINATION bin/tests)
+add_test(NAME exampleB1 COMMAND exampleB1 run1.mac)
 
 
