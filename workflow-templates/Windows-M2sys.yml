@@ -85,6 +85,12 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
 
+    - name: Setup vsdevenv
+      uses: seanmiddleditch/gha-setup-vsdevenv@master
+      with:
+        arch: 'x86'
+        host_arch: 'x86'
+
     - name: Install ccache ninja
       run: pacman --noconfirm -S ccache ninja cmake gcc make llvm python git
       shell: msys2 {0}
