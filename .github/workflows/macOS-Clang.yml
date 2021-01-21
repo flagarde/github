@@ -82,6 +82,9 @@ jobs:
           file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
 
+    - name: Use ccache
+      uses: hendrikmuhs/ccache-action@v1.0.2
+
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
       run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }}
@@ -101,9 +104,6 @@ jobs:
     - name: Test ROOT
       if: env.INSTALL_ROOT == 'TRUE'
       run: root --version
-
-    - name: Use ccache
-      uses: hendrikmuhs/ccache-action@v1.0.2
 
     - name: Configure
       run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=./geant4-install/lib/Geant4-${{ env.GEANT4_VERSION }}/
