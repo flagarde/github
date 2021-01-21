@@ -22,6 +22,7 @@ env:
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
+  GEANT4_INSTALL_DATA: ON
   
 jobs:
     
@@ -135,7 +136,7 @@ jobs:
           
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache 
+      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DGEANT4_INSTALL_DATADIR=./geant4-install
       
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
@@ -175,7 +176,7 @@ jobs:
       run: .\root\bin\thisroot.bat && root --version
           
     - name: Configure
-      run: .\root\bin\thisroot.bat && cmake -S . -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGeant4_DIR=.\geant4-install\lib\Geant4-${{ env.GEANT4_VERSION }}
+      run: .\root\bin\thisroot.bat && cmake -S . -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGeant4_DIR=.\geant4-install\lib\Geant4-${{ env.GEANT4_VERSION }}/
       shell: cmd
 
     - name: Build
@@ -227,8 +228,6 @@ jobs:
     if: contains(github.ref, 'tags/v')
     name: "Publish"
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: release
 
     steps:

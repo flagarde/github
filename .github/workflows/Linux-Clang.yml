@@ -18,6 +18,7 @@ env:
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
+  GEANT4_INSTALL_DATA: ON
 
 jobs:
   # Checkout apply clang-format and upload artifact
@@ -112,7 +113,7 @@ jobs:
           
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+      run: cmake -S ${{ github.workspace }}/geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DGEANT4_INSTALL_DATADIR=./geant4-install
       
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
@@ -122,7 +123,7 @@ jobs:
       run: cmake --install build-geant4 --prefix geant4-install --strip
       
     - name: Configure
-      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=./geant4-install/lib/Geant4-${{ env.GEANT4_VERSION }}
+      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=./geant4-install/lib/Geant4-${{ env.GEANT4_VERSION }}/
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
@@ -171,8 +172,6 @@ jobs:
     name: "Publish"
     if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: release
 
     steps:
