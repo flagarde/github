@@ -78,6 +78,32 @@ jobs:
       run: pacman --noconfirm -S ccache ninja cmake gcc make llvm python git
       shell: msys2 {0}
       
+    - name: Cache Geant4
+      id: cache-geant4
+      uses: actions/cache@v2
+      with:
+        path: ./geant4
+        key: geant4-${{ env.GEANT4_VERSION }}  
+      
+    - name: Download and extract GEANT4
+      if: env.INSTALL_GEANT4 == 'TRUE' && steps.cache-geant4.outputs.cache-hit != 'true'
+      shell: cmake -P {0}
+      run: |
+          set(GEANT4_URL "$ENV{GEANT4_URL}/v$ENV{GEANT4_VERSION}.zip")
+          file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
+          
+    - name: Configure Geant4
+      if: env.INSTALL_GEANT4 == 'TRUE'
+      run: cmake -S ${{ github.workspace }}/geant4/ -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=ON
+      
+    - name: Build Geant4
+      if: env.INSTALL_GEANT4 == 'TRUE'
+      run: cmake --build build-geant4 --config ${{ env.BUILD_TYPE }} --parallel 2
+      
+    - name: Install Strip
+      run: cmake --install build --prefix geant4 --strip
+      
     - name: Download and unzip ROOT
       if: steps.root-compile.outputs.cache-hit != 'true' && env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
