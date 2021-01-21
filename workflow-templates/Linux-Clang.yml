@@ -120,6 +120,7 @@ jobs:
       run: cmake --build build-geant4 --config ${{ env.BUILD_TYPE }} --parallel 2
 
     - name: Install Strip
+      if: env.INSTALL_GEANT4 == 'TRUE'
       run: cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Configure
@@ -190,6 +191,7 @@ jobs:
       run: |
         upload_url=`cat ./upload_url`
         echo ::set-output name=upload_url::$upload_url
+
     - name: Upload to Release
       id: upload_to_release
       uses: actions/upload-release-asset@v1.0.1

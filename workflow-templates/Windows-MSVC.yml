@@ -147,6 +147,7 @@ jobs:
       run: cmake --build build-geant4 --config ${{ env.BUILD_TYPE }} --parallel 2
 
     - name: Install Strip
+      if: env.INSTALL_GEANT4 == 'TRUE'
       run: cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Cache ROOT
