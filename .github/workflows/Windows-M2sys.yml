@@ -59,6 +59,10 @@ jobs:
     needs: format
     name: "Build"
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
 
     - uses: actions/download-artifact@v2
@@ -79,21 +83,7 @@ jobs:
         path-type: minimal
         release: true
         update: true
-
-    - name: Install Ninja
-      uses: seanmiddleditch/gha-setup-ninja@v3
-      with:
-        version: '${{env.NINJA_VERSION}}'
-
-    - name: Setup vsdevenv
-      uses: seanmiddleditch/gha-setup-vsdevenv@master
-      with:
-        arch: 'x86'
-        host_arch: 'x86'
-
-    - name: Install ccache ninja
-      run: pacman --noconfirm -S ccache ninja cmake gcc make llvm python git
-      shell: msys2 {0}
+        install: git mingw-w64-x86_64-toolchain ccache ninja cmake gcc make llvm python git
 
     - name: Download and extract GEANT4
       if: env.INSTALL_GEANT4 == 'TRUE'
@@ -102,10 +92,6 @@ jobs:
           set(GEANT4_URL "$ENV{GEANT4_URL}/v$ENV{GEANT4_VERSION}.zip")
           file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
-
-    - name: Create folder
-      if: env.INSTALL_GEANT4 == 'TRUE'
-      run: New-Item ./geant4-install -ItemType "directory" -Force
 
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
@@ -129,21 +115,17 @@ jobs:
 
     - name: Configure
       working-directory: ${{ github.workspace }}
-      run: bash ./root/bin/thisroot.sh ; cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DROOT_DIR=./root/cmake -DGeant4_DIR=./geant4-install/lib/Geant4-${{ env.GEANT4_VERSION }}/
-      shell: msys2 {0}
+      run: bash ./root/bin/thisroot.sh ; cmake -S . -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DROOT_DIR=./root/cmake -DGeant4_DIR=./geant4-install
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
-      shell: msys2 {0}
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
       run: ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
-      shell: msys2 {0}
 
     - name: Install Strip
       run: cmake --install build --prefix instdir --strip
-      shell: msys2 {0}
 
   release:
     name: "Release"
