@@ -129,7 +129,7 @@ jobs:
 
     - name: Create folder
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: New-Item ./geant4-install -ItemType "directory" -Force
+      run: New-Item ./geant4-install/data -ItemType "directory" -Force
 
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
