@@ -87,7 +87,7 @@ jobs:
 
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ./geant4-${{ env.GEANT4_VERSION }} -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_INSTALL_PREFIX=geant4-install  -DCMAKE_INSTALL_DATAROOTDIR=${CMAKE_INSTALL_PREFIX}/data
+      run: cmake -S ./geant4-${{ env.GEANT4_VERSION }} -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_INSTALL_PREFIX=geant4-install
 
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
