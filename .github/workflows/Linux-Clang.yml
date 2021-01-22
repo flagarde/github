@@ -11,8 +11,8 @@ env:
   CMAKE_VERSION: 3.16.x
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  CC: clang
-  CXX: clang++
+  CC: clang-10
+  CXX: clang++-10
   artifact: "Linux-Clang.tar.xz"
   INSTALL_ROOT: TRUE
   INSTALL_GEANT4: TRUE
@@ -26,6 +26,10 @@ jobs:
     name: "Format"
     runs-on: ubuntu-latest
     steps:
+
+    - name: Update Ubuntu
+      run: sudo apt update
+
     - name: Checkout
       uses: actions/checkout@v2.3.2
 

@@ -11,8 +11,8 @@ env:
   CMAKE_VERSION: 3.16.x
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  CC: gcc
-  CXX: g++
+  CC: gcc-10
+  CXX: g++-10
   artifact: "Linux-GCC.tar.xz"
   INSTALL_ROOT: TRUE
   INSTALL_GEANT4: TRUE
@@ -58,6 +58,9 @@ jobs:
     name: "Build"
     runs-on: ubuntu-20.04
     steps:
+
+    - name: Update Ubuntu
+      run: sudo apt update
 
     - uses: actions/download-artifact@v2
       with:
