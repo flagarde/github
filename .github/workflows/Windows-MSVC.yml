@@ -139,7 +139,7 @@ jobs:
       if: env.INSTALL_GEANT4 == 'TRUE'
       run: cmake --build build-geant4 --config ${{ env.BUILD_TYPE }} --parallel 2
 
-    - name: Install Strip
+    - name: Install Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
       run: sudo cmake --install build-geant4 --prefix geant4-install --strip
       shell: bash
