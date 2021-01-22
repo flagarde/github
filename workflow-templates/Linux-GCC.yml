@@ -77,12 +77,6 @@ jobs:
     - name: Setup conda
       uses: s-weigand/setup-conda@v1
 
-    - name: Cache conda
-      uses: actions/cache@v2
-      with:
-        path: /usr/share/miniconda
-        key: cacheconda
-
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
 
