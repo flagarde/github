@@ -10,8 +10,6 @@ on:
 env:
   CMAKE_VERSION: 3.16.x
   NINJA_VERSION: 1.10.2
-  CC: cl
-  CXX: cl
   BUILD_TYPE: Release
   artifact: "Windows-M2sys.tar.xz"
   INSTALL_ROOT: TRUE
