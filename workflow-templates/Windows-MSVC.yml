@@ -175,7 +175,7 @@ jobs:
       run: .\root\bin\thisroot.bat && root --version
 
     - name: Configure
-      run: .\root\bin\thisroot.bat && cmake -S . -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGeant4_DIR=.\geant4-install
+      run: .\root\bin\thisroot.bat && cmake -S . -G Ninja -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=buildcache -D CMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/
       shell: cmd
 
     - name: Build

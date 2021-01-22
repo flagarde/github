@@ -117,7 +117,7 @@ jobs:
       run: cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Configure
-      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=./geant4-install
+      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/
 
     - name: Build
       run: sudo cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
