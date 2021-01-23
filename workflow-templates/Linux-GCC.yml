@@ -104,8 +104,8 @@ jobs:
       run: sudo cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Install ROOT
+      run: conda install root -c conda-forge
       if: env.INSTALL_ROOT == 'TRUE'
-      run: brew install root
 
     - name: Test ROOT
       run: root --version
