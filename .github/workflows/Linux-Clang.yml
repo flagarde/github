@@ -87,8 +87,8 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.0.2
 
     - name: Install ROOT
-      run: conda install root -c conda-forge
       if: env.INSTALL_ROOT == 'TRUE'
+      run: brew install root
 
     - name: Test ROOT
       run: root --version
