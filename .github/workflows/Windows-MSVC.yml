@@ -132,9 +132,12 @@ jobs:
       if: env.INSTALL_GEANT4 == 'TRUE'
       run: New-Item ./geant4-install/data -ItemType "directory" -Force
 
+    - name: Add path
+      run: echo "::add-path::C:\msys64\mingw64\bin"
+
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ${{ github.workspace }}\geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_CXX_STANDARD=11 -DGEANT4_BUILD_CXXSTD=11 -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\geant4-install -DCMAKE_C_COMPILER=C:\msys64\mingw64\bin\clang -DCMAKE_CXX_COMPILER=C:\msys64\mingw64\bin\clang++
+      run: cmake -S ${{ github.workspace }}\geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=buildcache -DCMAKE_CXX_COMPILER_LAUNCHER=buildcache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_CXX_STANDARD=11 -DGEANT4_BUILD_CXXSTD=11 -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\geant4-install -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
