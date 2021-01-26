@@ -23,6 +23,11 @@ endif()
 include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+list(REMOVE_ITEM CMAKE_CXX_FLAGS "-Qunused-arguments")
+list(REMOVE_ITEM CMAKE_CXX_FLAGS_DEBUG "-Qunused-arguments")
+list(REMOVE_ITEM CMAKE_CXX_FLAGS_MINSIZEREL "-Qunused-arguments")
+list(REMOVE_ITEM CMAKE_CXX_FLAGS_RELEASE "-Qunused-arguments")
+list(REMOVE_ITEM CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Qunused-arguments")
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
