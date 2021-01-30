@@ -76,18 +76,10 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
 
-    - name: Download and extract GEANT4
-      if: env.INSTALL_GEANT4 == 'TRUE'
-      shell: cmake -P {0}
-      run: |
-          set(GEANT4_URL "$ENV{GEANT4_URL}/v$ENV{GEANT4_VERSION}.zip")
-          file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
-          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
-
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
 
-   - name: Download and extract ROOT
+    - name: Download and extract ROOT
       if: env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |

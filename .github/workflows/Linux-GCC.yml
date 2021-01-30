@@ -79,7 +79,7 @@ jobs:
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
 
-   - name: Download and extract ROOT
+    - name: Download and extract ROOT
       if: env.INSTALL_ROOT == 'TRUE'
       shell: cmake -P {0}
       run: |
