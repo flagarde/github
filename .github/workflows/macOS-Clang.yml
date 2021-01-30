@@ -15,6 +15,8 @@ env:
   CXX: clang++
   artifact: "macOS.tar.xz"
   INSTALL_ROOT: TRUE
+  ROOT_VERSION: 6.22.06
+  ROOT_URL: "https://github.com/root-project/root/archive"
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
@@ -85,9 +87,36 @@ jobs:
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
 
+   - name: Download and extract ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
+      shell: cmake -P {0}
+      run: |
+          file(DOWNLOAD "${{ env.ROOT_URL }}/v${{ env.ROOT_VERSION }}.zip" "./root-v${{ env.ROOT_VERSION }}.zip")
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root-v${{ env.ROOT_VERSION }}.zip)
+
+    - name: Configure ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
+      run: cmake -S ./root-${{ env.ROOT_VERSION }} -B build-root-v${{ env.ROOT_VERSION }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }}
+
+    - name: Build ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
+      run: cmake --build build-root-v${{ env.ROOT_VERSION }} --config ${{ env.BUILD_TYPE }} --parallel 2
+
+    - name: Install ROOT
+      if: env.INSTALL_ROOT == 'TRUE'
+      run: sudo cmake --install build-root-v${{ env.ROOT_VERSION }} --prefix install-root-v${{ env.ROOT_VERSION }} --strip
+
+    - name: Download and extract Geant4
+      if: env.INSTALL_GEANT4 == 'TRUE'
+      shell: cmake -P {0}
+      run: |
+          set(GEANT4_URL "$ENV{GEANT4_URL}/v$ENV{GEANT4_VERSION}.zip")
+          file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
+
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ./geant4-${{ env.GEANT4_VERSION }} -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_INSTALL_PREFIX=geant4-install
+      run: cmake -S ./geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_INSTALL_PREFIX=geant4-install
 
     - name: Build Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
@@ -95,25 +124,17 @@ jobs:
 
     - name: Install Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: sudo cmake --install build-geant4 --prefix geant4-install --strip
-
-    - name: Install ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      run: brew install root
-
-    - name: Test ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      run: root --version
+      run: cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Configure
-      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/
+      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/ -D ROOT_DIR=${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }}/cmake
 
     - name: Build
-      run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+      run: sudo cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
-      run: source ${{ github.workspace }}/geant4-install/bin/geant4.sh ; ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
+      run: source ${{ github.workspace }}/geant4-install/bin/geant4.sh ; source ${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }}/bin/thisroot.sh ; ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
 
     - name: Install Strip
       run: cmake --install build --prefix instdir --strip
