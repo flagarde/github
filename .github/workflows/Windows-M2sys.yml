@@ -13,7 +13,7 @@ env:
   BUILD_TYPE: Release
   artifact: "Windows-M2sys.tar.xz"
   INSTALL_ROOT: TRUE
-  ROOT_VERSION: "6.22.06"
+  ROOT_VERSION: 6-20-06
   ROOT_URL: "https://root.cern/download"
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
