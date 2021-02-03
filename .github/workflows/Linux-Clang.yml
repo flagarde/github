@@ -68,6 +68,9 @@ jobs:
       with:
         name: clang-format
 
+    - name: Install libxpm-dev
+      run: sudo apt-get install libxpm-dev davix-dev
+      
     - name: Install cmake
       uses: jwlawson/actions-setup-cmake@v1.6
       with:
