@@ -67,7 +67,7 @@ jobs:
 
     - name: Install libxpm-dev
       run: sudo apt-get install libxpm-dev davix-dev
-      
+
     - name: Install cmake
       uses: jwlawson/actions-setup-cmake@v1.6
       with:
@@ -91,7 +91,7 @@ jobs:
 
     - name: Configure ROOT
       if: env.INSTALL_ROOT == 'TRUE'
-      run: cmake -S ./root-${{ env.ROOT_VERSION }} -B build-root-v${{ env.ROOT_VERSION }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }}
+      run: cmake -S ./root-${{ env.ROOT_VERSION }} -B build-root-v${{ env.ROOT_VERSION }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }} -DCMAKE_CXX_STANDARD=17
 
     - name: Build ROOT
       if: env.INSTALL_ROOT == 'TRUE'
