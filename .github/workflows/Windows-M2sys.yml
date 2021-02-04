@@ -14,7 +14,7 @@ env:
   artifact: "Windows-M2sys.tar.xz"
   INSTALL_ROOT: TRUE
   ROOT_VERSION: 6-20-06
-  ROOT_URL: "https://root.cern/download"
+  ROOT_URL: "https://github.com/root-project/root/archive"
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
