@@ -1,4 +1,4 @@
-name: Windows M2sys
+name: Windows M2sys ROOT Geant4
 
 on:
     push:
