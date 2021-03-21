@@ -1,4 +1,4 @@
-name: macOS Clang
+name: Linux Clang
 
 on:
     push:
@@ -11,12 +11,10 @@ env:
   CMAKE_VERSION: 3.16.x
   NINJA_VERSION: 1.10.2
   BUILD_TYPE: Release
-  CC: clang
-  CXX: clang++
-  artifact: "macOS.tar.xz"
+  CC: clang-10
+  CXX: clang++-10
+  artifact: "Linux-Clang.tar.xz"
   INSTALL_ROOT: TRUE
-  ROOT_VERSION: 6-20-06
-  ROOT_URL: "https://github.com/root-project/root/archive"
   INSTALL_GEANT4: TRUE
   GEANT4_VERSION: 10.4.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
@@ -28,6 +26,7 @@ jobs:
     name: "Format"
     runs-on: ubuntu-latest
     steps:
+
     - name: Checkout
       uses: actions/checkout@v2.3.2
 
@@ -58,8 +57,13 @@ jobs:
   build:
     needs: format
     name: "Build"
-    runs-on: macos-latest
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
     steps:
+
+    - name: Update Ubuntu
+      run: sudo apt update ; sudo apt full-upgrade
 
     - uses: actions/download-artifact@v2
       with:
@@ -76,29 +80,21 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
 
+    - name: Setup conda
+      uses: s-weigand/setup-conda@v1
+
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
 
-    - name: Download and extract ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      shell: cmake -P {0}
-      run: |
-          file(DOWNLOAD "${{ env.ROOT_URL }}/v${{ env.ROOT_VERSION }}.zip" "./root-v${{ env.ROOT_VERSION }}.zip")
-          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./root-v${{ env.ROOT_VERSION }}.zip)
-
-    - name: Configure ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      run: cmake -S ./root-${{ env.ROOT_VERSION }} -B build-root-v${{ env.ROOT_VERSION }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }} -Dminimal=TRUE -DCMAKE_CXX_STANDARD=17
-
-    - name: Build ROOT
-      if: env.INSTALL_ROOT == 'TRUE'
-      run: cmake --build build-root-v${{ env.ROOT_VERSION }} --config ${{ env.BUILD_TYPE }} --parallel 2
-
     - name: Install ROOT
+      run: conda install root -c conda-forge
       if: env.INSTALL_ROOT == 'TRUE'
-      run: sudo cmake --install build-root-v${{ env.ROOT_VERSION }} --prefix install-root-v${{ env.ROOT_VERSION }} --strip
 
-    - name: Download and extract Geant4
+    - name: Test ROOT
+      run: root --version
+      if: env.INSTALL_ROOT == 'TRUE'
+
+    - name: Download and extract GEANT4
       if: env.INSTALL_GEANT4 == 'TRUE'
       shell: cmake -P {0}
       run: |
@@ -119,14 +115,14 @@ jobs:
       run: cmake --install build-geant4 --prefix geant4-install --strip
 
     - name: Configure
-      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/ -D ROOT_DIR=${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }}/cmake
+      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/
 
     - name: Build
       run: sudo cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
-      run: source ${{ github.workspace }}/geant4-install/bin/geant4.sh ; source ${{ github.workspace }}/install-root-v${{ env.ROOT_VERSION }}/bin/thisroot.sh ; ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
+      run: source ${{ github.workspace }}/geant4-install/bin/geant4.sh ; ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
 
     - name: Install Strip
       run: cmake --install build --prefix instdir --strip
@@ -149,15 +145,20 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: 🔗 Store Release url
+    - name: Store Release url
       run: |
         echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
+
+    - name: Pack
+      working-directory: instdir
+      run: cmake -E tar cJfv ../${{ env.artifact }} .
 
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
         path: instdir
         name: ${{ env.artifact }}
+
 
   publish:
     name: "Publish"
@@ -181,6 +182,7 @@ jobs:
       run: |
         upload_url=`cat ./upload_url`
         echo ::set-output name=upload_url::$upload_url
+
     - name: Upload to Release
       id: upload_to_release
       uses: actions/upload-release-asset@v1.0.1

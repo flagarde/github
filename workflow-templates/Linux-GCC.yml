@@ -14,11 +14,6 @@ env:
   CC: gcc-10
   CXX: g++-10
   artifact: "Linux-GCC.tar.xz"
-  INSTALL_ROOT: TRUE
-  INSTALL_GEANT4: TRUE
-  GEANT4_VERSION: 10.4.3
-  GEANT4_URL: "https://github.com/Geant4/geant4/archive"
-  GEANT4_INSTALL_DATA: YES
 
 jobs:
   # Checkout apply clang-format and upload artifact
@@ -83,43 +78,15 @@ jobs:
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
 
-    - name: Download and extract GEANT4
-      if: env.INSTALL_GEANT4 == 'TRUE'
-      shell: cmake -P {0}
-      run: |
-          set(GEANT4_URL "$ENV{GEANT4_URL}/v$ENV{GEANT4_VERSION}.zip")
-          file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
-          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
-
-    - name: Configure Geant4
-      if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake -S ./geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_USE_SYSTEM_EXPAT=OFF -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_INSTALL_PREFIX=geant4-install -DCMAKE_C_COMPILER=clang-10 -DCMAKE_CXX_COMPILER=clang++-10
-
-    - name: Build Geant4
-      if: env.INSTALL_GEANT4 == 'TRUE'
-      run: cmake --build build-geant4 --config ${{ env.BUILD_TYPE }} --parallel 2
-
-    - name: Install Geant4
-      if: env.INSTALL_GEANT4 == 'TRUE'
-      run: sudo cmake --install build-geant4 --prefix geant4-install --strip
-
-    - name: Install ROOT
-      run: conda install root -c conda-forge
-      if: env.INSTALL_ROOT == 'TRUE'
-
-    - name: Test ROOT
-      run: root --version
-      if: env.INSTALL_ROOT == 'TRUE'
-
     - name: Configure
-      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGeant4_DIR=${{ github.workspace }}/geant4-install/lib/Geant4-10.4.3/ -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10
+      run: cmake -S ${{ github.workspace }} -G Ninja  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/build
-      run: source ${{ github.workspace }}/geant4-install/bin/geant4.sh ; ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
+      run: ctest -C ${{ env.BUILD_TYPE }} -j2 -VV --output-on-failure
 
     - name: Install Strip
       run: cmake --install build --prefix instdir --strip

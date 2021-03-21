@@ -1,6 +1,6 @@
 {
-    "name": "Linux Clang",
-    "description": "Compile for Linux with Clang",
+    "name": "Linux Clang ROOT Geant4",
+    "description": "Compile for Linux with Clang, ROOT and Geant4",
     "iconName": "Linux-Clang",
     "categories":
     [

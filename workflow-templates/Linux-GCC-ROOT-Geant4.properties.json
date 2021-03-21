@@ -1,6 +1,6 @@
 {
-    "name": "Linux GCC",
-    "description": "Compile for Linux with GCC",
+    "name": "Linux GCC ROOT Geant4",
+    "description": "Compile for Linux with GCC, ROOT and Geant4",
     "iconName": "Linux-GCC",
     "categories":
     [

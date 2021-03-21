@@ -1,6 +1,6 @@
 {
-    "name": "Windows M2sys",
-    "description": "Compile for Windows with M2sys",
+    "name": "Windows M2sys ROOT Geant4",
+    "description": "Compile for Windows with M2sys, ROOT and Geant4",
     "iconName": "Windows-M2sys",
     "categories":
     [

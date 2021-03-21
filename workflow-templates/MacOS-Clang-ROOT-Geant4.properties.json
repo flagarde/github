@@ -1,0 +1,13 @@
+{
+    "name": "macOS Clang ROOT Geant4",
+    "description": "Compile for macOS with Clang, ROOT and Geant4",
+    "iconName": "MacOS",
+    "categories":
+    [
+        "C++", "C", "CMake"
+    ],
+    "filePatterns":
+    [
+        "CMakeLists.txt"
+    ]
+}

@@ -1,6 +1,6 @@
 {
-    "name": "Windows MSVC",
-    "description": "Compile for Windows with MSVC",
+    "name": "Windows MSVC ROOT Geant4",
+    "description": "Compile for Windows with MSVC, ROOT and Geant4",
     "iconName": "Windows-MSVC",
     "categories":
     [

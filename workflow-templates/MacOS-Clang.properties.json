@@ -1,12 +1,12 @@
 {
     "name": "macOS Clang",
     "description": "Compile for macOS with Clang",
-    "iconName": "macOS",
-    "categories": 
+    "iconName": "MacOS",
+    "categories":
     [
         "C++", "C", "CMake"
     ],
-    "filePatterns": 
+    "filePatterns":
     [
         "CMakeLists.txt"
     ]
