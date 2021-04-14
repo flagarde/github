@@ -80,8 +80,9 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
 
-    - name: Setup conda
-      uses: s-weigand/setup-conda@v1
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
 
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
