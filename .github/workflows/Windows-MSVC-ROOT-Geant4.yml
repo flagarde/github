@@ -142,7 +142,7 @@ jobs:
 
     - name: Install Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
-      run: sudo cmake --install build-geant4 --prefix geant4-install --strip
+      run: cmake --install build-geant4 --prefix geant4-install --strip
       shell: bash
 
     - name: Cache ROOT
