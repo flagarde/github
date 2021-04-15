@@ -16,7 +16,7 @@ env:
   artifact: "Linux-GCC.tar.xz"
   INSTALL_ROOT: TRUE
   INSTALL_GEANT4: TRUE
-  GEANT4_VERSION: 10.4.3
+  GEANT4_VERSION: 10.5.1
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
   GEANT4_INSTALL_DATA: YES
 
@@ -77,9 +77,8 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
 
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        auto-update-conda: true
+    - name: Setup conda
+      uses: s-weigand/setup-conda@v1
 
     - name: Use ccache
       uses: hendrikmuhs/ccache-action@v1.0.2
@@ -91,7 +90,6 @@ jobs:
           set(GEANT4_URL "$ENV{GEANT4_URL}/v$ENV{GEANT4_VERSION}.zip")
           file(DOWNLOAD "${GEANT4_URL}" "./geant4.zip")
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
-
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
       run: cmake -S ./geant4-${{ env.GEANT4_VERSION }} -G Ninja  -B build-geant4 -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -DGEANT4_USE_SYSTEM_EXPAT=OFF -DGEANT4_INSTALL_DATA=${{ env.GEANT4_INSTALL_DATA }} -DCMAKE_INSTALL_PREFIX=geant4-install
@@ -145,7 +143,6 @@ jobs:
     - name: Store Release url
       run: |
         echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
-
     - name: Pack
       working-directory: instdir
       run: cmake -E tar cJfv ../${{ env.artifact }} .
@@ -177,7 +174,6 @@ jobs:
       run: |
         upload_url=`cat ./upload_url`
         echo ::set-output name=upload_url::$upload_url
-
     - name: Upload to Release
       id: upload_to_release
       uses: actions/upload-release-asset@v1.0.1

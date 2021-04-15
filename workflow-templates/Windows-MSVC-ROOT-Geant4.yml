@@ -18,10 +18,10 @@ env:
   BUILDCACHE_VERSION: 0.23.0
   BUILDCACHE_DIR: ${{ github.workspace }}/buildcache_dir
   INSTALL_ROOT: TRUE
-  ROOT_VERSION: "6.22.06"
+  ROOT_VERSION: "6.24.00"
   ROOT_URL: "https://root.cern/download"
   INSTALL_GEANT4: TRUE
-  GEANT4_VERSION: 10.4.3
+  GEANT4_VERSION: 10.5.1
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
   GEANT4_INSTALL_DATA: YES
 
