@@ -16,7 +16,7 @@ env:
   artifact: "Linux-Clang.tar.xz"
   INSTALL_ROOT: TRUE
   INSTALL_GEANT4: TRUE
-  GEANT4_VERSION: 10.5.1
+  GEANT4_VERSION: 10.6.3
   GEANT4_URL: "https://github.com/Geant4/geant4/archive"
   GEANT4_INSTALL_DATA: YES
 
