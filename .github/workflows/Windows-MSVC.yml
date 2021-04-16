@@ -75,11 +75,7 @@ jobs:
       with:
         version: '${{env.NINJA_VERSION}}'
 
-    - name: Setup vsdevenv
-      uses: seanmiddleditch/gha-setup-vsdevenv@master
-      with:
-        arch: 'x86'
-        host_arch: 'x86'
+    - uses: ilammy/msvc-dev-cmd@v1
 
     - name: Download buildcache
       id: buildcache-download
