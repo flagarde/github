@@ -83,7 +83,7 @@ jobs:
           execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./geant4.zip)
 
     - name: Use ccache
-      uses: hendrikmuhs/ccache-action@v1.0.4
+      uses: hendrikmuhs/ccache-action@v1.0.5
 
     - name: Configure Geant4
       if: env.INSTALL_GEANT4 == 'TRUE'
